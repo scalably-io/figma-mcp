@@ -35,7 +35,7 @@
     "request_timeout_ms": { "type": "string", "title": "Request timeout (ms)", "description": "Per-request timeout in milliseconds", "default": "60000", "required": false, "sensitive": false },
     "max_json_bytes": { "type": "string", "title": "Max JSON response bytes", "description": "Upper bound on a Figma JSON response, in bytes", "default": "104857600", "required": false, "sensitive": false },
     "max_frame_bytes": { "type": "string", "title": "Max frame PNG bytes", "description": "Upper bound on a downloaded frame PNG, in bytes", "default": "104857600", "required": false, "sensitive": false },
-    "output_root": { "type": "string", "title": "Output root", "description": "Directory that all fetch_frame output directories must stay below", "default": "./figma-output", "required": false, "sensitive": false }
+    "output_root": { "type": "directory", "title": "Output root", "description": "Directory that all fetch_frame output directories must stay below", "default": "./figma-output", "required": false, "sensitive": false }
   },
   "compatibility": { "claude_desktop": ">=0.10.0", "platforms": ["darwin", "win32", "linux"], "runtimes": { "node": ">=20" } }
 }

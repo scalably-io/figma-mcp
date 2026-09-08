@@ -23,7 +23,9 @@ Claude Desktop: download `figma-mcp.mcpb` from the latest GitHub release and ope
 ## Setup
 
 1. Create a personal access token at figma.com under account settings, with `file_content:read` scope.
-2. `fetch_frame` is the only tool that writes files; it writes `frame.png`, `node.json`, and `fills.json` into a directory below the configured output root (default `./figma-output`). The other tool is fully read-only.
+2. Find the file key in any Figma file URL: it is the segment after `/design/` or `/file/`, for example `https://www.figma.com/design/AbC123xyz/My-file` gives `AbC123xyz`. Both tools take it as `file_key`.
+3. If `FIGMA_TOKEN` is not set the server still starts and lists its tools; every call then fails with `FIGMA_NOT_CONFIGURED` until the token is provided.
+4. `fetch_frame` is the only tool that writes files; it writes `frame.png`, `node.json`, and `fills.json` into a directory below the configured output root (default `./figma-output`). The other tool is fully read-only.
 
 ## Tools (2)
 
