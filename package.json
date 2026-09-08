@@ -1,0 +1,20 @@
+{
+  "name": "@scalably-io/figma-mcp",
+  "version": "1.0.0",
+  "description": "Figma MCP: list frames in a file and fetch one frame's JSON and image safely. 2 tools.",
+  "mcpName": "io.scalably/figma-mcp",
+  "type": "module",
+  "license": "MIT",
+  "author": "Scalably <hello@scalably.io>",
+  "homepage": "https://scalably.io/mcp/figma-mcp",
+  "repository": { "type": "git", "url": "git+https://github.com/scalably-io/figma-mcp.git" },
+  "bugs": { "url": "https://github.com/scalably-io/figma-mcp/issues" },
+  "keywords": ["mcp", "model-context-protocol", "scalably", "figma", "design"],
+  "bin": { "scalably-figma-mcp": "dist/index.js" },
+  "files": ["dist"],
+  "publishConfig": { "access": "public" },
+  "engines": { "node": ">=20" },
+  "scripts": { "build": "tsc", "test": "npm run build && node --test test/*.test.js" },
+  "dependencies": { "fastmcp": "4.20.6", "zod": "4.5.4" },
+  "devDependencies": { "@types/node": "26.5.0", "typescript": "7.0.2" }
+}

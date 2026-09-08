@@ -1,0 +1,41 @@
+{
+  "manifest_version": "0.4",
+  "name": "figma-mcp",
+  "display_name": "Figma MCP",
+  "version": "1.0.0",
+  "description": "Figma MCP: list frames in a file and fetch one frame's JSON and image safely. 2 tools.",
+  "author": { "name": "Scalably", "email": "hello@scalably.io", "url": "https://scalably.io" },
+  "repository": { "type": "git", "url": "https://github.com/scalably-io/figma-mcp" },
+  "homepage": "https://scalably.io/mcp/figma-mcp",
+  "license": "MIT",
+  "keywords": ["mcp", "scalably", "figma"],
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/dist/index.js"],
+      "env": {
+        "FIGMA_TOKEN": "${user_config.figma_token}",
+        "FIGMA_API_BASE_URL": "${user_config.api_base_url}",
+        "FIGMA_REQUEST_TIMEOUT_MS": "${user_config.request_timeout_ms}",
+        "FIGMA_MAX_JSON_BYTES": "${user_config.max_json_bytes}",
+        "FIGMA_MAX_FRAME_BYTES": "${user_config.max_frame_bytes}",
+        "FIGMA_OUTPUT_ROOT": "${user_config.output_root}"
+      }
+    }
+  },
+  "tools": [
+    { "name": "list_frames", "description": "List and optionally filter all top-level FRAME nodes in a Figma file." },
+    { "name": "fetch_frame", "description": "Fetch one Figma frame and write its PNG, node JSON, and image-fill map into the output directory." }
+  ],
+  "user_config": {
+    "figma_token": { "type": "string", "title": "Figma token", "description": "Figma personal access token with file_content:read", "required": true, "sensitive": true },
+    "api_base_url": { "type": "string", "title": "API base URL", "description": "Override the Figma REST API base URL", "default": "https://api.figma.com/v1", "required": false, "sensitive": false },
+    "request_timeout_ms": { "type": "string", "title": "Request timeout (ms)", "description": "Per-request timeout in milliseconds", "default": "60000", "required": false, "sensitive": false },
+    "max_json_bytes": { "type": "string", "title": "Max JSON response bytes", "description": "Upper bound on a Figma JSON response, in bytes", "default": "104857600", "required": false, "sensitive": false },
+    "max_frame_bytes": { "type": "string", "title": "Max frame PNG bytes", "description": "Upper bound on a downloaded frame PNG, in bytes", "default": "104857600", "required": false, "sensitive": false },
+    "output_root": { "type": "string", "title": "Output root", "description": "Directory that all fetch_frame output directories must stay below", "default": "./figma-output", "required": false, "sensitive": false }
+  },
+  "compatibility": { "claude_desktop": ">=0.10.0", "platforms": ["darwin", "win32", "linux"], "runtimes": { "node": ">=20" } }
+}

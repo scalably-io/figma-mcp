@@ -1,0 +1,36 @@
+name: release
+on:
+  push:
+    tags: ["v*"]
+jobs:
+  npm:
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: "22", registry-url: "https://registry.npmjs.org" }
+      - run: npm install -g npm@latest
+      - run: npm ci && npm run build
+      - name: Publish unless this version is already on npm
+        run: |
+          NAME=$(node -p "require('./package.json').name"); VERSION=$(node -p "require('./package.json').version")
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then echo "$NAME@$VERSION already published, skipping"; else npm publish --access public; fi
+  mcpb:
+    needs: npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: "22" }
+      - run: npm ci && npm run build && npm ci --omit=dev
+      - run: npx -y @anthropic-ai/mcpb@2.1.2 validate manifest.json
+      - run: npx -y @anthropic-ai/mcpb@2.1.2 pack . "${GITHUB_REPOSITORY#*/}.mcpb"
+      - run: printf '%s' "$(sha256sum "${GITHUB_REPOSITORY#*/}.mcpb" | cut -d' ' -f1)" > "${GITHUB_REPOSITORY#*/}.mcpb.sha256"
+      - run: gh release create "${GITHUB_REF_NAME}" "${GITHUB_REPOSITORY#*/}.mcpb" "${GITHUB_REPOSITORY#*/}.mcpb.sha256" --title "${GITHUB_REF_NAME}" --notes "See CHANGELOG.md"
+        env: { GH_TOKEN: "${{ github.token }}" }
