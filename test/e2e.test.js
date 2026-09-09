@@ -201,9 +201,9 @@ function createMcpClient({ api, outputRoot }) {
       const response = await request('initialize', {
         protocolVersion: '2025-03-26',
         capabilities: {},
-        clientInfo: { name: 'figma-e2e', version: '1.0.0' },
+        clientInfo: { name: 'figma-e2e', version: '1.0.1' },
       });
-      assert.equal(response.result?.serverInfo?.version, '1.0.0');
+      assert.equal(response.result?.serverInfo?.version, '1.0.1');
       child.stdin.write(
         `${JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' })}\n`,
       );
@@ -243,8 +243,9 @@ test('Figma stdio surface is exact and frame artifacts are fully proven', async 
       ['list_frames', 'fetch_frame'],
     );
     assert.equal(listedTools.result.tools[0].annotations.readOnlyHint, true);
-    assert.equal(listedTools.result.tools[1].annotations.readOnlyHint, true);
-    assert.equal(listedTools.result.tools[1].annotations.destructiveHint, true);
+    // fetch_frame writes files, so it is not read-only; it never deletes, so it is not destructive.
+    assert.equal(listedTools.result.tools[1].annotations.readOnlyHint, false);
+    assert.equal(listedTools.result.tools[1].annotations.destructiveHint, false);
 
     const listed = await client.callTool('list_frames', {
       file_key: 'test-file',
@@ -384,7 +385,7 @@ test('Figma starts without a token and returns a not-configured failure', async 
     await request('initialize', {
       protocolVersion: '2025-03-26',
       capabilities: {},
-      clientInfo: { name: 'figma-e2e-noauth', version: '1.0.0' },
+      clientInfo: { name: 'figma-e2e-noauth', version: '1.0.1' },
     });
     child.stdin.write(`${JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' })}\n`);
     pending.delete(1);

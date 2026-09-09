@@ -39,6 +39,6 @@ test('both tools advertise truthful MCP annotations', () => {
   );
   assert.match(
     source,
-    /name: 'fetch_frame'[\s\S]*?readOnlyHint: true[\s\S]*?destructiveHint: true/,
+    /name: 'fetch_frame'[\s\S]*?readOnlyHint: false[\s\S]*?destructiveHint: false/,
   );
 });
