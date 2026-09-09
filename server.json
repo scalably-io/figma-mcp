@@ -63,6 +63,14 @@
           "isSecret": false
         }
       ]
+    },
+    {
+      "registryType": "mcpb",
+      "identifier": "https://github.com/scalably-io/figma-mcp/releases/download/v1.0.1/figma-mcp.mcpb",
+      "fileSha256": "d3dbe2d709fa60cafb24402e7e153a71737f70a23334f54fe9cb1380a8bc6bd4",
+      "transport": {
+        "type": "stdio"
+      }
     }
   ]
 }
