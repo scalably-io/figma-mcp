@@ -25,7 +25,7 @@ Claude Desktop: download `figma-mcp.mcpb` from the latest GitHub release and ope
 1. Create a personal access token at figma.com under account settings, with `file_content:read` scope.
 2. Find the file key in any Figma file URL: it is the segment after `/design/` or `/file/`, for example `https://www.figma.com/design/AbC123xyz/My-file` gives `AbC123xyz`. Both tools take it as `file_key`.
 3. If `FIGMA_TOKEN` is not set the server still starts and lists its tools; every call then fails with `FIGMA_NOT_CONFIGURED` until the token is provided.
-4. `fetch_frame` is the only tool that writes files; it writes `frame.png`, `node.json`, and `fills.json` into a directory below the configured output root (default `./figma-output`). The other tool is fully read-only.
+4. `fetch_frame` is the only tool that writes files (so it is not marked read-only); it writes `frame.png`, `node.json`, and `fills.json` into a directory below the configured output root (default `./figma-output`). The other tool is fully read-only.
 
 ## Tools (2)
 
@@ -43,7 +43,8 @@ Claude Desktop: download `figma-mcp.mcpb` from the latest GitHub release and ope
 | `FIGMA_REQUEST_TIMEOUT_MS` | no | Per-request timeout in milliseconds (default 60000) |
 | `FIGMA_MAX_JSON_BYTES` | no | Upper bound on a Figma JSON response, in bytes (default 104857600) |
 | `FIGMA_MAX_FRAME_BYTES` | no | Upper bound on a downloaded frame PNG, in bytes (default 104857600) |
-| `FIGMA_OUTPUT_ROOT` | no | Directory that every `fetch_frame` output directory must stay below (default `./figma-output`) |
+| `FIGMA_OUTPUT_ROOT` | no | Directory that every `fetch_frame` output directory must stay below (default `./figma-output`, created on first use) |
+| `FIGMA_ALLOW_HTTP_FOR_TESTS` | no | Test suite only: `1` allows a plain-HTTP loopback API base. Never set it in normal use |
 
 ## Reply shape
 

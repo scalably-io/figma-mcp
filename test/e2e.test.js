@@ -257,6 +257,16 @@ test('Figma stdio surface is exact and frame artifacts are fully proven', async 
     assert.equal(listOutcome.proof.request.requestId, 'request-200');
     assert.equal(listOutcome.result.file.version, '42');
 
+    // A relative out_dir resolves below the output root (1.0.1); the root is created on demand.
+    const relativeFetch = envelope(await client.callTool('fetch_frame', {
+      file_key: 'test-file',
+      node_id: '1:2',
+      out_dir: path.join('relative', 'frame'),
+      scale: 1,
+    }));
+    assert.equal(relativeFetch.status, 'succeeded');
+    assert.ok(fs.existsSync(path.join(outputRoot, 'relative', 'frame', 'frame.png')), 'relative out_dir landed below the output root');
+
     const outDir = path.join(outputRoot, 'figma-work');
     const fetched = await client.callTool('fetch_frame', {
       file_key: 'test-file',

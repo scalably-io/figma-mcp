@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1
+
+- `fetch_frame` is declared `readOnlyHint: false` again, as in production: it writes files. 1.0.0 shipped it as read-only, which lets clients skip the approval prompt.
+- The output root (default `./figma-output`) is created on first use, and a relative `out_dir` resolves below it, so a fresh install can fetch a frame without preparing directories. 1.0.0 required an existing absolute path.
+- The loopback allowlist for test API bases is the production set again (IPv4, IPv6 and `localhost`); 1.0.0 had narrowed it to `localhost` without saying so.
+- README: the test-only `FIGMA_ALLOW_HTTP_FOR_TESTS` variable and the `operation` and `target` reply keys are documented.
+
 ## 1.0.0
 
 - First public release.

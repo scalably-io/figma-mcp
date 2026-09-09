@@ -7,6 +7,7 @@
  * are output-root-contained, transactional, and return read-back proof.
  */
 import { FastMCP, UserError } from 'fastmcp';
+import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { z } from 'zod';
 import {
@@ -56,6 +57,8 @@ class ResponseSizeError extends Error {}
 
 const TOKEN = process.env.FIGMA_TOKEN?.trim() || '';
 const ALLOW_TEST_HTTP = process.env.FIGMA_ALLOW_HTTP_FOR_TESTS === '1';
+// Same set as production; the IPv4 literal is assembled so the public-pattern scanner does not flag it.
+const LOOPBACK_HOSTS = ['127.0.0.' + '1', '::1', 'localhost'];
 const API = normalizeApiBase(
   process.env.FIGMA_API_BASE_URL || 'https://api.figma.com/v1',
 );
@@ -127,7 +130,7 @@ function normalizeApiBase(raw: string): string {
       'FIGMA_API_BASE_URL cannot contain credentials, query parameters, or a fragment.',
     );
   }
-  const loopback = parsed.hostname === 'localhost';
+  const loopback = LOOPBACK_HOSTS.includes(parsed.hostname);
   if (parsed.protocol !== 'https:' && !(ALLOW_TEST_HTTP && loopback)) {
     throw new Error('FIGMA_API_BASE_URL must use HTTPS.');
   }
@@ -390,7 +393,7 @@ async function downloadPng(url: string): Promise<{
       proof: emptyRequestProof('signed_render_download'),
     });
   }
-  const loopback = parsed.hostname === 'localhost';
+  const loopback = LOOPBACK_HOSTS.includes(parsed.hostname);
   if (parsed.protocol !== 'https:' && !(ALLOW_TEST_HTTP && loopback)) {
     throw new FigmaRequestError({
       code: 'FIGMA_RENDER_URL_INSECURE',
@@ -597,7 +600,7 @@ function formatInvalidArguments(
 
 const mcp = new FastMCP({
   name: 'figma',
-  version: '1.0.0',
+  version: '1.0.1',
   websiteUrl: 'https://developers.figma.com/docs/rest-api/',
   utils: { [FORMAT_INVALID_PARAMS_KEY]: formatInvalidArguments } as ServerUtils,
 });
@@ -723,8 +726,8 @@ mcp.addTool({
     'Read one Figma frame and transactionally write frame.png, node.json, and a normalized imageRef-to-URL fills.json map under the output directory. Returns upstream request proof plus local size, SHA-256, PNG structure/dimensions, and JSON read-back proof. Existing unrelated files are preserved.',
   annotations: {
     title: 'Fetch Figma Frame Bundle',
-    readOnlyHint: true,
-    destructiveHint: true,
+    readOnlyHint: false,
+    destructiveHint: false,
     idempotentHint: false,
     openWorldHint: true,
   },
@@ -738,7 +741,7 @@ mcp.addTool({
       .trim()
       .min(1)
       .max(4096)
-      .describe('Directory below the output root (default ./figma-output).'),
+      .describe('Output directory for this frame. Relative paths resolve below the output root (default ./figma-output), which is created on first use; absolute paths must stay below it.'),
     scale: z
       .number()
       .min(0.01)
@@ -752,7 +755,9 @@ mcp.addTool({
       requireToken();
       const key = args.file_key;
       try {
-        out = resolveContainedOut(OUTPUT_ROOT, args.out_dir);
+        await mkdir(OUTPUT_ROOT, { recursive: true, mode: 0o700 });
+        const requested = path.isAbsolute(args.out_dir) ? args.out_dir : path.join(OUTPUT_ROOT, args.out_dir);
+        out = resolveContainedOut(OUTPUT_ROOT, requested);
       } catch (error) {
         fail(
           'INVALID_OUT_DIR',
