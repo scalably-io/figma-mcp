@@ -3,7 +3,10 @@
   "name": "io.scalably/figma-mcp",
   "title": "Figma MCP",
   "description": "Figma MCP: list frames in a file and fetch one frame's JSON and image safely. 2 tools.",
-  "repository": { "url": "https://github.com/scalably-io/figma-mcp", "source": "github" },
+  "repository": {
+    "url": "https://github.com/scalably-io/figma-mcp",
+    "source": "github"
+  },
   "websiteUrl": "https://scalably.io/mcp/figma-mcp",
   "version": "1.0.0",
   "packages": [
@@ -13,15 +16,55 @@
       "identifier": "@scalably-io/figma-mcp",
       "version": "1.0.0",
       "runtimeHint": "npx",
-      "transport": { "type": "stdio" },
+      "transport": {
+        "type": "stdio"
+      },
       "environmentVariables": [
-        { "name": "FIGMA_TOKEN", "description": "Figma personal access token with file_content:read", "isRequired": true, "isSecret": true },
-        { "name": "FIGMA_API_BASE_URL", "description": "Figma REST API base URL, default https://api.figma.com/v1", "isRequired": false, "isSecret": false },
-        { "name": "FIGMA_REQUEST_TIMEOUT_MS", "description": "Per-request timeout in milliseconds, default 60000", "isRequired": false, "isSecret": false },
-        { "name": "FIGMA_MAX_JSON_BYTES", "description": "Upper bound on a Figma JSON response in bytes, default 104857600", "isRequired": false, "isSecret": false },
-        { "name": "FIGMA_MAX_FRAME_BYTES", "description": "Upper bound on a downloaded frame PNG in bytes, default 104857600", "isRequired": false, "isSecret": false },
-        { "name": "FIGMA_OUTPUT_ROOT", "description": "Directory that all fetch_frame output directories must stay below, default ./figma-output", "isRequired": false, "isSecret": false }
+        {
+          "name": "FIGMA_TOKEN",
+          "description": "Figma personal access token with file_content:read",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "FIGMA_API_BASE_URL",
+          "description": "Figma REST API base URL, default https://api.figma.com/v1",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "FIGMA_REQUEST_TIMEOUT_MS",
+          "description": "Per-request timeout in milliseconds, default 60000",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "FIGMA_MAX_JSON_BYTES",
+          "description": "Upper bound on a Figma JSON response in bytes, default 104857600",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "FIGMA_MAX_FRAME_BYTES",
+          "description": "Upper bound on a downloaded frame PNG in bytes, default 104857600",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "FIGMA_OUTPUT_ROOT",
+          "description": "Directory that all fetch_frame output directories must stay below, default ./figma-output",
+          "isRequired": false,
+          "isSecret": false
+        }
       ]
+    },
+    {
+      "registryType": "mcpb",
+      "identifier": "https://github.com/scalably-io/figma-mcp/releases/download/v1.0.0/figma-mcp.mcpb",
+      "fileSha256": "07f1384949d95ce8f44182eb47eb795af7734912bcb6206048bf31edceb4e1a7",
+      "transport": {
+        "type": "stdio"
+      }
     }
   ]
 }
