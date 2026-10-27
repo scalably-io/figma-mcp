@@ -38,7 +38,7 @@
     "test": "npm run build && node --test test/*.test.js"
   },
   "dependencies": {
-    "fastmcp": "4.20.6",
+    "fastmcp": "4.23.7",
     "zod": "4.5.4"
   },
   "devDependencies": {
